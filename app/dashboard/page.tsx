@@ -101,22 +101,77 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Email Verification Banner */}
+        {/* Email Verification Section */}
         {!user.emailVerified && (
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-            <div className="flex">
+          <div className="bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50 border-2 border-yellow-300 rounded-xl shadow-lg p-8 mb-6">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
+                <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                  <svg className="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
               </div>
-              <div className="ml-3">
-                <p className="text-sm text-yellow-700">
-                  Please verify your email address to access all features.{' '}
-                  <Link href="/verify-email" className="font-medium underline hover:text-yellow-600">
-                    Send verification email
-                  </Link>
+              <div className="flex-1 text-center md:text-left">
+                <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
+                  <h3 className="text-2xl font-bold text-gray-900">Verify Your Email</h3>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-red-500 text-white animate-bounce">
+                    URGENT
+                  </span>
+                </div>
+                <p className="text-gray-700 mb-4 text-lg">
+                  Complete email verification to unlock your <span className="font-bold text-green-600">$200 bonus</span> and access premium features!
                 </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+                  <Link
+                    href="/verify-email"
+                    className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg hover:from-green-600 hover:to-emerald-700 shadow-lg transform hover:scale-105 transition-all duration-200"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Verify Email & Claim $200
+                  </Link>
+                  <div className="flex items-center justify-center text-sm text-gray-600">
+                    <svg className="w-4 h-4 mr-1 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                    </svg>
+                    Takes less than 2 minutes
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-3 gap-3 text-center">
+                  <div className="bg-white/50 rounded-lg p-2">
+                    <div className="text-xs text-gray-600">Bonus</div>
+                    <div className="text-sm font-bold text-green-600">$200</div>
+                  </div>
+                  <div className="bg-white/50 rounded-lg p-2">
+                    <div className="text-xs text-gray-600">Verified in</div>
+                    <div className="text-sm font-bold text-blue-600">24 hrs</div>
+                  </div>
+                  <div className="bg-white/50 rounded-lg p-2">
+                    <div className="text-xs text-gray-600">Status</div>
+                    <div className="text-sm font-bold text-orange-600">Pending</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Verified Success Message */}
+        {user.emailVerified && (
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl shadow-md p-6 mb-6">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <div className="ml-4">
+                <h3 className="text-lg font-bold text-green-900">✓ Email Verified!</h3>
+                <p className="text-sm text-green-700">Your account is fully activated. Enjoy all premium features!</p>
               </div>
             </div>
           </div>
