@@ -2,11 +2,11 @@ import { supabase, isSupabaseConfigured } from './supabase';
 
 export interface User {
   id: string;
-  name: string;
+  name?: string;
   email: string;
   password: string; // This will be hashed
-  institution: string;
-  fieldOfStudy: string;
+  institution?: string;
+  fieldOfStudy?: string;
   createdAt: string;
   emailVerified: boolean;
 }
@@ -31,11 +31,8 @@ export async function getAllUsers(): Promise<User[]> {
 
   return (data || []).map(row => ({
     id: row.id,
-    name: row.name,
     email: row.email,
     password: row.password,
-    institution: row.institution,
-    fieldOfStudy: row.field_of_study,
     createdAt: row.created_at,
     emailVerified: row.email_verified,
   }));
@@ -59,11 +56,8 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 
   return {
     id: data.id,
-    name: data.name,
     email: data.email,
     password: data.password,
-    institution: data.institution,
-    fieldOfStudy: data.field_of_study,
     createdAt: data.created_at,
     emailVerified: data.email_verified,
   };
@@ -87,11 +81,8 @@ export async function getUserById(id: string): Promise<User | null> {
 
   return {
     id: data.id,
-    name: data.name,
     email: data.email,
     password: data.password,
-    institution: data.institution,
-    fieldOfStudy: data.field_of_study,
     createdAt: data.created_at,
     emailVerified: data.email_verified,
   };
@@ -103,7 +94,8 @@ export async function createUser(
   if (!isSupabaseConfigured() || !supabase) {
     console.warn('Supabase not configured, using in-memory storage');
     const newUser: User = {
-      ...userData,
+      email: userData.email,
+      password: userData.password,
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
       createdAt: new Date().toISOString(),
       emailVerified: false,
@@ -115,11 +107,8 @@ export async function createUser(
   const { data, error } = await supabase
     .from('users')
     .insert({
-      name: userData.name,
       email: userData.email,
       password: userData.password,
-      institution: userData.institution,
-      field_of_study: userData.fieldOfStudy,
       email_verified: false,
     })
     .select()
@@ -132,11 +121,8 @@ export async function createUser(
 
   return {
     id: data.id,
-    name: data.name,
     email: data.email,
     password: data.password,
-    institution: data.institution,
-    fieldOfStudy: data.field_of_study,
     createdAt: data.created_at,
     emailVerified: data.email_verified,
   };

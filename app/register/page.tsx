@@ -7,12 +7,9 @@ import Link from 'next/link';
 export default function RegisterPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    institution: '',
-    fieldOfStudy: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -20,11 +17,6 @@ export default function RegisterPage() {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
-    // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -44,16 +36,6 @@ export default function RegisterPage() {
     // Confirm password validation
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    // Institution validation
-    if (!formData.institution.trim()) {
-      newErrors.institution = 'Institution is required';
-    }
-
-    // Field of study validation
-    if (!formData.fieldOfStudy.trim()) {
-      newErrors.fieldOfStudy = 'Field of study is required';
     }
 
     setErrors(newErrors);
@@ -77,11 +59,8 @@ export default function RegisterPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
           email: formData.email,
           password: formData.password,
-          institution: formData.institution,
-          fieldOfStudy: formData.fieldOfStudy,
         }),
       });
 
@@ -109,7 +88,7 @@ export default function RegisterPage() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -137,23 +116,6 @@ export default function RegisterPage() {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
-            {/* Name */}
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Full Name *
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                value={formData.name}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
-                placeholder="John Doe"
-              />
-              {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-            </div>
-
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -203,40 +165,6 @@ export default function RegisterPage() {
                 placeholder="Re-enter password"
               />
               {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
-            </div>
-
-            {/* Institution */}
-            <div>
-              <label htmlFor="institution" className="block text-sm font-medium text-gray-700">
-                Institution *
-              </label>
-              <input
-                id="institution"
-                name="institution"
-                type="text"
-                value={formData.institution}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
-                placeholder="University name"
-              />
-              {errors.institution && <p className="mt-1 text-sm text-red-600">{errors.institution}</p>}
-            </div>
-
-            {/* Field of Study */}
-            <div>
-              <label htmlFor="fieldOfStudy" className="block text-sm font-medium text-gray-700">
-                Field of Study *
-              </label>
-              <input
-                id="fieldOfStudy"
-                name="fieldOfStudy"
-                type="text"
-                value={formData.fieldOfStudy}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
-                placeholder="e.g., Computer Science, Biology, etc."
-              />
-              {errors.fieldOfStudy && <p className="mt-1 text-sm text-red-600">{errors.fieldOfStudy}</p>}
             </div>
           </div>
 

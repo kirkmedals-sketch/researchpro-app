@@ -26,31 +26,22 @@ export interface Database {
       users: {
         Row: {
           id: string;
-          name: string;
           email: string;
           password: string;
-          institution: string;
-          field_of_study: string;
           created_at: string;
           email_verified: boolean;
         };
         Insert: {
           id?: string;
-          name: string;
           email: string;
           password: string;
-          institution: string;
-          field_of_study: string;
           created_at?: string;
           email_verified?: boolean;
         };
         Update: {
           id?: string;
-          name?: string;
           email?: string;
           password?: string;
-          institution?: string;
-          field_of_study?: string;
           created_at?: string;
           email_verified?: boolean;
         };

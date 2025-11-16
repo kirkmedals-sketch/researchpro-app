@@ -9,12 +9,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-producti
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, password, institution, fieldOfStudy } = body;
+    const { email, password } = body;
 
     // Validation
-    if (!name || !email || !password || !institution || !fieldOfStudy) {
+    if (!email || !password) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: 'Email and password are required' },
         { status: 400 }
       );
     }
@@ -51,11 +51,8 @@ export async function POST(request: NextRequest) {
 
     // Create user
     const newUser = await createUser({
-      name,
       email,
       password: hashedPassword,
-      institution,
-      fieldOfStudy,
     });
 
     if (!newUser) {

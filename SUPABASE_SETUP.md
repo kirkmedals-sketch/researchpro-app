@@ -26,14 +26,11 @@ This guide will help you set up Supabase as your database for the ResearchPro ap
 3. Copy and paste this SQL code:
 
 ```sql
--- Create users table
+-- Create users table (simplified - only email and password)
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
-  institution TEXT NOT NULL,
-  field_of_study TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   email_verified BOOLEAN DEFAULT FALSE
 );

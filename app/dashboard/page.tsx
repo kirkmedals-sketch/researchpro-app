@@ -6,10 +6,10 @@ import Link from 'next/link';
 
 interface UserData {
   id: string;
-  name: string;
+  name?: string;
   email: string;
-  institution: string;
-  fieldOfStudy: string;
+  institution?: string;
+  fieldOfStudy?: string;
   createdAt: string;
   emailVerified: boolean;
 }
@@ -94,7 +94,7 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Welcome back, {user.name}!
+            Welcome back!
           </h2>
           <p className="text-gray-600">
             Manage your academic writing projects and access our services.
@@ -132,17 +132,19 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium text-gray-900">{user.email}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Institution</p>
-                <p className="text-sm font-medium text-gray-900">{user.institution}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Field of Study</p>
-                <p className="text-sm font-medium text-gray-900">{user.fieldOfStudy}</p>
-              </div>
-              <div>
                 <p className="text-sm text-gray-500">Member Since</p>
                 <p className="text-sm font-medium text-gray-900">
                   {new Date(user.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Account Status</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {user.emailVerified ? (
+                    <span className="text-green-600">✓ Verified</span>
+                  ) : (
+                    <span className="text-yellow-600">Pending verification</span>
+                  )}
                 </p>
               </div>
             </div>
