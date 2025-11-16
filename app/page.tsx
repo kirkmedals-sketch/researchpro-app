@@ -33,7 +33,7 @@ export default function Home() {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Professional academic writing services for students and researchers.
             Get expert assistance with essays, research papers, theses, and
-            more. Earn $200 for registration that will be confirmed after 24 hours.
+            more.
           </p>
           <div className="flex justify-center gap-4">
             <Link
