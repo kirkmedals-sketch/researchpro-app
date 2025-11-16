@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { getUserById, updateUser } from '@/lib/database';
+import { getUserById } from '@/lib/database';
+import { resend, FROM_EMAIL } from '@/lib/resend';
+import { VerificationEmail } from '@/lib/email-templates';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,25 +49,53 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In a real application, you would:
-    // 1. Generate a verification token
-    // 2. Send an email with verification link
-    // 3. Store the token in database
-
-    // For demo/pentesting purposes, we'll simulate this
-    console.log(`Verification request for: ${user.email}`);
-    console.log(`User ID: ${user.id}`);
-    console.log(`This would send an email in production`);
-
-    // Simulate email sending success
-    return NextResponse.json(
-      {
-        message: 'Verification request sent successfully',
-        email: user.email,
-        note: 'In production, an email would be sent. For pentesting, verification will be processed within 24 hours.',
-      },
-      { status: 200 }
+    // Generate verification token (valid for 24 hours)
+    const verificationToken = jwt.sign(
+      { userId: user.id, email: user.email, type: 'verification' },
+      JWT_SECRET,
+      { expiresIn: '24h' }
     );
+
+    // Create verification URL
+    const verificationUrl = `${APP_URL}/api/auth/verify-email?token=${verificationToken}`;
+
+    // Send email using Resend
+    try {
+      const { data, error } = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: [user.email],
+        subject: '🎉 Verify Your Email & Claim $200 - ResearchPro',
+        react: VerificationEmail({
+          verificationUrl,
+          email: user.email,
+        }),
+      });
+
+      if (error) {
+        console.error('Resend error:', error);
+        return NextResponse.json(
+          { error: 'Failed to send verification email. Please try again.' },
+          { status: 500 }
+        );
+      }
+
+      console.log('Verification email sent:', data);
+
+      return NextResponse.json(
+        {
+          message: 'Verification email sent successfully',
+          email: user.email,
+        },
+        { status: 200 }
+      );
+
+    } catch (emailError) {
+      console.error('Email sending error:', emailError);
+      return NextResponse.json(
+        { error: 'Failed to send verification email. Please check your email configuration.' },
+        { status: 500 }
+      );
+    }
 
   } catch (error) {
     console.error('Send verification error:', error);
