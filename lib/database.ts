@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase, isSupabaseConfigured } from './supabase';
 
 export interface User {
   id: string;
@@ -11,7 +11,15 @@ export interface User {
   emailVerified: boolean;
 }
 
+// Fallback in-memory storage for when Supabase isn't configured
+let inMemoryUsers: User[] = [];
+
 export async function getAllUsers(): Promise<User[]> {
+  if (!isSupabaseConfigured() || !supabase) {
+    console.warn('Supabase not configured, using in-memory storage');
+    return inMemoryUsers;
+  }
+
   const { data, error } = await supabase
     .from('users')
     .select('*');
@@ -34,6 +42,11 @@ export async function getAllUsers(): Promise<User[]> {
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
+  if (!isSupabaseConfigured() || !supabase) {
+    console.warn('Supabase not configured, using in-memory storage');
+    return inMemoryUsers.find(user => user.email.toLowerCase() === email.toLowerCase()) || null;
+  }
+
   const { data, error } = await supabase
     .from('users')
     .select('*')
@@ -57,6 +70,11 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 }
 
 export async function getUserById(id: string): Promise<User | null> {
+  if (!isSupabaseConfigured() || !supabase) {
+    console.warn('Supabase not configured, using in-memory storage');
+    return inMemoryUsers.find(user => user.id === id) || null;
+  }
+
   const { data, error } = await supabase
     .from('users')
     .select('*')
@@ -82,6 +100,18 @@ export async function getUserById(id: string): Promise<User | null> {
 export async function createUser(
   userData: Omit<User, 'id' | 'createdAt' | 'emailVerified'>
 ): Promise<User | null> {
+  if (!isSupabaseConfigured() || !supabase) {
+    console.warn('Supabase not configured, using in-memory storage');
+    const newUser: User = {
+      ...userData,
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      createdAt: new Date().toISOString(),
+      emailVerified: false,
+    };
+    inMemoryUsers.push(newUser);
+    return newUser;
+  }
+
   const { data, error } = await supabase
     .from('users')
     .insert({
@@ -116,6 +146,15 @@ export async function updateUser(
   id: string,
   updates: Partial<User>
 ): Promise<User | null> {
+  if (!isSupabaseConfigured() || !supabase) {
+    console.warn('Supabase not configured, using in-memory storage');
+    const userIndex = inMemoryUsers.findIndex(user => user.id === id);
+    if (userIndex === -1) return null;
+
+    inMemoryUsers[userIndex] = { ...inMemoryUsers[userIndex], ...updates };
+    return inMemoryUsers[userIndex];
+  }
+
   const updateData: any = {};
 
   if (updates.name !== undefined) updateData.name = updates.name;
