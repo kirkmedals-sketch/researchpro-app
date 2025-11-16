@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { createUser, getUserByEmail } from '@/lib/database';
 
@@ -45,14 +44,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
+    // Store password in plain text (INSECURE - for pentesting only!)
     // Create user
     const newUser = await createUser({
       email,
-      password: hashedPassword,
+      password: password, // Plain text password
     });
 
     if (!newUser) {

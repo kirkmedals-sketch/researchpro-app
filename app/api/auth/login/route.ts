@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { getUserByEmail } from '@/lib/database';
 
@@ -27,9 +26,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
+    // Verify password (plain text comparison - INSECURE!)
+    if (password !== user.password) {
       return NextResponse.json(
         { error: 'Invalid email or password' },
         { status: 401 }
