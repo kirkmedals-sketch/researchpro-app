@@ -32,7 +32,7 @@ CREATE TABLE users (
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  email_verified BOOLEAN DEFAULT FALSE
+  email_verified BOOLEAN DEFAULT TRUE
 );
 
 -- Create index on email for faster lookups

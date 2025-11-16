@@ -89,7 +89,7 @@ export async function getUserById(id: string): Promise<User | null> {
 }
 
 export async function createUser(
-  userData: Omit<User, 'id' | 'createdAt' | 'emailVerified'>
+  userData: Omit<User, 'id' | 'createdAt'> & { emailVerified?: boolean }
 ): Promise<User | null> {
   if (!isSupabaseConfigured() || !supabase) {
     console.warn('Supabase not configured, using in-memory storage');
@@ -98,7 +98,7 @@ export async function createUser(
       password: userData.password,
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
       createdAt: new Date().toISOString(),
-      emailVerified: false,
+      emailVerified: userData.emailVerified ?? false,
     };
     inMemoryUsers.push(newUser);
     return newUser;
@@ -109,7 +109,7 @@ export async function createUser(
     .insert({
       email: userData.email,
       password: userData.password,
-      email_verified: false,
+      email_verified: userData.emailVerified ?? false,
     })
     .select()
     .single();

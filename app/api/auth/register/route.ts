@@ -45,10 +45,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Store password in plain text (INSECURE - for pentesting only!)
-    // Create user
+    // Create user with auto-verified email (for pentesting purposes)
     const newUser = await createUser({
       email,
       password: password, // Plain text password
+      emailVerified: true, // Auto-verify users
     });
 
     if (!newUser) {
