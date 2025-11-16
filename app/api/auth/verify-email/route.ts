@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
+import * as React from 'react';
 import { getUserById, updateUser } from '@/lib/database';
 import { resend, FROM_EMAIL } from '@/lib/resend';
 import { WelcomeEmail } from '@/lib/email-templates';
@@ -57,7 +58,7 @@ export async function GET(request: NextRequest) {
         subject: '✅ Welcome to ResearchPro - Email Verified!',
         react: WelcomeEmail({
           email: user.email,
-        }),
+        }) as React.ReactElement,
       });
     } catch (emailError) {
       console.error('Failed to send welcome email:', emailError);

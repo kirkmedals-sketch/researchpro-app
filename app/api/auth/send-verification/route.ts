@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
+import * as React from 'react';
 import { getUserById } from '@/lib/database';
 import { resend, FROM_EMAIL } from '@/lib/resend';
 import { VerificationEmail } from '@/lib/email-templates';
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
         react: VerificationEmail({
           verificationUrl,
           email: user.email,
-        }),
+        }) as React.ReactElement,
       });
 
       if (error) {
