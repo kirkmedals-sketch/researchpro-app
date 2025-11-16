@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get user data
-    const user = getUserById(decoded.userId);
+    const user = await getUserById(decoded.userId);
 
     if (!user) {
       return NextResponse.json(

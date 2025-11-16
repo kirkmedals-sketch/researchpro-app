@@ -1,3 +1,5 @@
+import { supabase } from './supabase';
+
 export interface User {
   id: string;
   name: string;
@@ -9,42 +11,140 @@ export interface User {
   emailVerified: boolean;
 }
 
-// In-memory storage for Vercel serverless environment
-// Note: Data will reset on each deployment. For production, upgrade to:
-// - Vercel Postgres, Supabase, MongoDB Atlas, or PlanetScale
-let usersStore: User[] = [];
+export async function getAllUsers(): Promise<User[]> {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*');
 
-export function getAllUsers(): User[] {
-  return usersStore;
+  if (error) {
+    console.error('Error fetching users:', error);
+    return [];
+  }
+
+  return (data || []).map(row => ({
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    password: row.password,
+    institution: row.institution,
+    fieldOfStudy: row.field_of_study,
+    createdAt: row.created_at,
+    emailVerified: row.email_verified,
+  }));
 }
 
-export function getUserByEmail(email: string): User | null {
-  return usersStore.find(user => user.email.toLowerCase() === email.toLowerCase()) || null;
-}
+export async function getUserByEmail(email: string): Promise<User | null> {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .ilike('email', email)
+    .single();
 
-export function getUserById(id: string): User | null {
-  return usersStore.find(user => user.id === id) || null;
-}
-
-export function createUser(userData: Omit<User, 'id' | 'createdAt' | 'emailVerified'>): User {
-  const newUser: User = {
-    ...userData,
-    id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-    createdAt: new Date().toISOString(),
-    emailVerified: false,
-  };
-
-  usersStore.push(newUser);
-  return newUser;
-}
-
-export function updateUser(id: string, updates: Partial<User>): User | null {
-  const userIndex = usersStore.findIndex(user => user.id === id);
-
-  if (userIndex === -1) {
+  if (error || !data) {
     return null;
   }
 
-  usersStore[userIndex] = { ...usersStore[userIndex], ...updates };
-  return usersStore[userIndex];
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    password: data.password,
+    institution: data.institution,
+    fieldOfStudy: data.field_of_study,
+    createdAt: data.created_at,
+    emailVerified: data.email_verified,
+  };
+}
+
+export async function getUserById(id: string): Promise<User | null> {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    password: data.password,
+    institution: data.institution,
+    fieldOfStudy: data.field_of_study,
+    createdAt: data.created_at,
+    emailVerified: data.email_verified,
+  };
+}
+
+export async function createUser(
+  userData: Omit<User, 'id' | 'createdAt' | 'emailVerified'>
+): Promise<User | null> {
+  const { data, error } = await supabase
+    .from('users')
+    .insert({
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+      institution: userData.institution,
+      field_of_study: userData.fieldOfStudy,
+      email_verified: false,
+    })
+    .select()
+    .single();
+
+  if (error || !data) {
+    console.error('Error creating user:', error);
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    password: data.password,
+    institution: data.institution,
+    fieldOfStudy: data.field_of_study,
+    createdAt: data.created_at,
+    emailVerified: data.email_verified,
+  };
+}
+
+export async function updateUser(
+  id: string,
+  updates: Partial<User>
+): Promise<User | null> {
+  const updateData: any = {};
+
+  if (updates.name !== undefined) updateData.name = updates.name;
+  if (updates.email !== undefined) updateData.email = updates.email;
+  if (updates.password !== undefined) updateData.password = updates.password;
+  if (updates.institution !== undefined) updateData.institution = updates.institution;
+  if (updates.fieldOfStudy !== undefined) updateData.field_of_study = updates.fieldOfStudy;
+  if (updates.emailVerified !== undefined) updateData.email_verified = updates.emailVerified;
+
+  const { data, error } = await supabase
+    .from('users')
+    .update(updateData)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error || !data) {
+    console.error('Error updating user:', error);
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    password: data.password,
+    institution: data.institution,
+    fieldOfStudy: data.field_of_study,
+    createdAt: data.created_at,
+    emailVerified: data.email_verified,
+  };
 }

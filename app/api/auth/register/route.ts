@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already exists
-    const existingUser = getUserByEmail(email);
+    const existingUser = await getUserByEmail(email);
     if (existingUser) {
       return NextResponse.json(
         { error: 'Email already registered' },
@@ -50,13 +50,20 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // Create user
-    const newUser = createUser({
+    const newUser = await createUser({
       name,
       email,
       password: hashedPassword,
       institution,
       fieldOfStudy,
     });
+
+    if (!newUser) {
+      return NextResponse.json(
+        { error: 'Failed to create user' },
+        { status: 500 }
+      );
+    }
 
     // Generate JWT token
     const token = jwt.sign(
