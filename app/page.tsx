@@ -105,7 +105,7 @@ export default function Home() {
           </p>
           <div className="flex justify-center gap-4">
             <Link
-              href="/register"
+              href={user ? "/dashboard" : "/register"}
               className="px-8 py-3 text-lg font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-lg"
             >
               Start Your Project
@@ -144,7 +144,7 @@ export default function Home() {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link
-                  href="/register"
+                  href={user ? "/dashboard" : "/register"}
                   className="px-8 py-3 bg-white text-indigo-600 rounded-lg font-bold hover:bg-gray-100 shadow-lg transform hover:scale-105 transition-all duration-200"
                 >
                   Claim Your $200 Now →
@@ -383,7 +383,7 @@ export default function Home() {
             ResearchPro
           </p>
           <Link
-            href="/register"
+            href={user ? "/dashboard" : "/register"}
             className="px-8 py-3 text-lg font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-lg inline-block"
           >
             Create Free Account
