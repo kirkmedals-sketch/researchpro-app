@@ -18,6 +18,9 @@ export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -248,13 +251,22 @@ export default function DashboardPage() {
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
             <div className="space-y-3">
-              <button className="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium">
+              <button
+                onClick={() => setShowNewProjectModal(true)}
+                className="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium transition-colors"
+              >
                 New Project
               </button>
-              <button className="w-full px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 text-sm font-medium">
+              <button
+                onClick={() => setShowUploadModal(true)}
+                className="w-full px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 text-sm font-medium transition-colors"
+              >
                 Upload Document
               </button>
-              <button className="w-full px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 text-sm font-medium">
+              <button
+                onClick={() => setShowQuoteModal(true)}
+                className="w-full px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 text-sm font-medium transition-colors"
+              >
                 Request Quote
               </button>
             </div>
@@ -273,6 +285,173 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* New Project Modal */}
+      {showNewProjectModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Create New Project</h3>
+              <button onClick={() => setShowNewProjectModal(false)} className="text-gray-400 hover:text-gray-600">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Project Type</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option>Essay Writing</option>
+                  <option>Research Paper</option>
+                  <option>Thesis</option>
+                  <option>Dissertation</option>
+                  <option>Proofreading</option>
+                  <option>Editing</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Project Title</label>
+                <input type="text" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter project title" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+                <input type="date" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Brief project description..."></textarea>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button type="button" onClick={() => setShowNewProjectModal(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                  Cancel
+                </button>
+                <button type="submit" className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                  Create Project
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Document Modal */}
+      {showUploadModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Upload Document</h3>
+              <button onClick={() => setShowUploadModal(false)} className="text-gray-400 hover:text-gray-600">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-500 transition-colors">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <p className="mt-2 text-sm text-gray-600">Click to upload or drag and drop</p>
+                <p className="text-xs text-gray-500">PDF, DOC, DOCX (MAX. 10MB)</p>
+                <input type="file" className="hidden" accept=".pdf,.doc,.docx" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Document Type</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option>Draft for Review</option>
+                  <option>Reference Material</option>
+                  <option>Assignment Brief</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
+                <textarea rows={2} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Any special instructions..."></textarea>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button type="button" onClick={() => setShowUploadModal(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                  Cancel
+                </button>
+                <button type="submit" className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                  Upload
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Request Quote Modal */}
+      {showQuoteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Request a Quote</h3>
+              <button onClick={() => setShowQuoteModal(false)} className="text-gray-400 hover:text-gray-600">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Service Type</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option>Essay Writing</option>
+                  <option>Research Paper</option>
+                  <option>Thesis/Dissertation</option>
+                  <option>Proofreading & Editing</option>
+                  <option>Citation & Formatting</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Academic Level</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option>High School</option>
+                  <option>Undergraduate</option>
+                  <option>Masters</option>
+                  <option>PhD</option>
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Pages</label>
+                  <input type="number" min="1" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="10" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option>24 hours</option>
+                    <option>3 days</option>
+                    <option>7 days</option>
+                    <option>14 days</option>
+                    <option>30+ days</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Additional Details</label>
+                <textarea rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tell us more about your requirements..."></textarea>
+              </div>
+              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
+                <p className="text-sm text-indigo-700">
+                  <span className="font-semibold">Estimated Price:</span> We'll send you a detailed quote within 1 hour
+                </p>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={() => setShowQuoteModal(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                  Cancel
+                </button>
+                <button type="submit" className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                  Submit Request
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
