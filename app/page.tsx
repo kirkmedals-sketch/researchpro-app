@@ -59,9 +59,12 @@ export default function Home() {
               </div>
             ) : user ? (
               <>
-                <span className="text-sm font-medium text-gray-700">
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-medium text-gray-700 hover:text-indigo-600 hover:underline cursor-pointer"
+                >
                   {user.email}
-                </span>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
